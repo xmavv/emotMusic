@@ -7,7 +7,7 @@ export async function Pacmap() {
     <ul>
       {songsAndEmotions.map((songAndEmotion) => (
         <div key={songAndEmotion.id}>
-          {songAndEmotion.name} {songAndEmotion.SongsEmotions.surprise}
+          {songAndEmotion.name} {songAndEmotion.SongsEmotions?.surprise}
         </div>
       ))}
     </ul>

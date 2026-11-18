@@ -7,7 +7,7 @@ export async function D3() {
     <ul>
       {songsAndEmotions.map((songAndEmotion) => (
         <div key={songAndEmotion.id}>
-          {songAndEmotion.name} {songAndEmotion.SongsEmotions.surprise}
+          {songAndEmotion.name} {songAndEmotion.SongsEmotions?.surprise}
         </div>
       ))}
     </ul>
