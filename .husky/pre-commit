@@ -1,0 +1,18 @@
+# Regenerate database types when migrations or the seed change.
+if git diff --cached --name-only | grep -qE '^supabase/(migrations/.+\.sql|seed\.sql)$'; then
+  echo "pre-commit: database changes staged, regenerating services/supabase/database.types.ts"
+  if ! npx supabase status >/dev/null 2>&1; then
+    npm run db:start || {
+      echo "pre-commit: could not start local Supabase. Start Docker and commit again."
+      exit 1
+    }
+  fi
+  npm run db:reset || exit 1
+  npm run db:types || exit 1
+  npm run db:lint || exit 1
+  git add services/supabase/database.types.ts
+fi
+
+npx lint-staged
+
+npm run typecheck
