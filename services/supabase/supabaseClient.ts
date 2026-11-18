@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "./database.types";
 
 const supabaseEnv = {
   url: process.env.SUPABASE_URL || "",
@@ -7,6 +8,6 @@ const supabaseEnv = {
 if (!supabaseEnv.url || !supabaseEnv.key)
   throw new Error("provide required supabaseClient environment!");
 
-const supabaseClient = createClient(supabaseEnv.url, supabaseEnv.key);
+const supabaseClient = createClient<Database>(supabaseEnv.url, supabaseEnv.key);
 
 export default supabaseClient;

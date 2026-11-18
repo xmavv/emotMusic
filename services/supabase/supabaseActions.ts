@@ -5,10 +5,12 @@ export const getSongs = async (): Promise<Song[]> => {
   const { data, error } = await supabaseClient.from(TABLES.SONGS).select("*");
 
   if (error) throw new Error(error.message);
-  return data as Song[];
+  return data;
 };
 
-export const getSongAndEmotion = async (id: number): Promise<SongEmotion> => {
+export const getSongAndEmotion = async (
+  id: number,
+): Promise<SongEmotion | null> => {
   const { data, error } = await supabaseClient
     .from(TABLES.SONGS)
     .select(`*, ${TABLES.EMOTIONS} (*)`)
