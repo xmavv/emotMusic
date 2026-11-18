@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: Lint, format, type-check, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+        env:
+          SUPABASE_URL: http://127.0.0.1:54321
+          SUPABASE_KEY: ci-placeholder
+
+  database:
+    name: Migrations, seed, types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Apply migrations and seed locally
+        run: npx supabase start -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Lint database schema
+        run: npm run db:lint
+
+      - name: Security and performance advisors
+        run: npm run db:advisors
+
+      - name: Check generated types are up to date
+        run: |
+          npm run db:types
+          git diff --exit-code services/supabase/database.types.ts || {
+            echo "::error::services/supabase/database.types.ts is out of date. Run 'npm run db:reset && npm run db:types' and commit the result."
+            exit 1
+          }
+
+      - name: Stop Supabase
+        if: always()
+        run: npx supabase stop --no-backup
