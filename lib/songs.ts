@@ -1,4 +1,4 @@
-import type { Song } from "@/services/supabase/supabaseTables";
+import type { Song } from "@/services/supabase/tables";
 
 export function getSongDate(song: Pick<Song, "date">) {
   return song.date ? Date.parse(song.date) : NaN;

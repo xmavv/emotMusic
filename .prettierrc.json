@@ -1,10 +1,7 @@
 {
   "overrides": [
     {
-      "files": [
-        "app/scatterplot/**/*.{ts,tsx}",
-        "app/countriesmap/**/*.{ts,tsx}"
-      ],
+      "files": ["app/scatterplot/**/*.{ts,tsx}"],
       "options": {
         "printWidth": 120
       }

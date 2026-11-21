@@ -1,4 +1,4 @@
-import type { SongEmotion } from "@/services/supabase/supabaseTables";
+import type { SongEmotion } from "@/services/supabase/tables";
 import { dateFormat, emotions, scoreFormat } from "@/app/components/song-emotions";
 import { Scatterplot } from "@/app/components/scatterplot";
 import { getSongGenres, getSongDate } from "@/lib/songs";
