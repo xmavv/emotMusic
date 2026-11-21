@@ -129,10 +129,29 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      country_year_emotions: {
+        Row: {
+          anger: number | null;
+          anticipation: number | null;
+          country: string | null;
+          disgust: number | null;
+          fear: number | null;
+          joy: number | null;
+          sadness: number | null;
+          song_count: number | null;
+          surprise: number | null;
+          trust: number | null;
+          year: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
     };
     Functions: {
-      [_ in never]: never;
+      refresh_country_year_emotions: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

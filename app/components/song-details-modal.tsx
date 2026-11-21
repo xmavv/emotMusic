@@ -1,4 +1,4 @@
-import type { Artist, SongEmotion } from "@/services/supabase/supabaseTables";
+import type { Artist, SongEmotion } from "@/services/supabase/tables";
 import { getSongGenres, getSongDate } from "@/lib/songs";
 import { DetailsModal } from "./details-modal";
 import { SongEmotionScores } from "./song-emotion-scores";
