@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getSongAndEmotion } from "@/services/supabase/supabaseActions";
+import { getSongAndEmotion } from "@/services/supabase/actions";
 
 export async function Spiderchart({ id }: { id: number }) {
   const songAndEmotion = await getSongAndEmotion(id);

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { D3 } from "@/app/3D/3D";
+import { D3 } from "@/app/3d/3d";
 
 export default function Page() {
   return (

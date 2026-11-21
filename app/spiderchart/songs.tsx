@@ -1,4 +1,4 @@
-import { getSongs } from "@/services/supabase/supabaseActions";
+import { getSongs } from "@/services/supabase/actions";
 
 export async function Songs() {
   const songs = await getSongs();

@@ -1,5 +1,5 @@
-import supabaseClient from "./supabaseClient";
-import { Artist, Song, SongEmotion, TABLES } from "./supabaseTables";
+import supabaseClient from "./client";
+import { Artist, Song, SongEmotion, TABLES } from "./tables";
 
 export const getSongs = async (): Promise<Song[]> => {
   const { data, error } = await supabaseClient.from(TABLES.SONGS).select("*");
