@@ -1,3 +1,4 @@
+import { LoadingScreen } from "@/app/components/loading-screen";
 import { Suspense } from "react";
 import { Spiderchart } from "@/app/spiderchart/[songId]/spiderchart";
 
@@ -15,7 +16,7 @@ async function View({ params }: SpiderchartParams) {
 
 export default function Page({ params }: SpiderchartParams) {
   return (
-    <Suspense fallback={"loading data"}>
+    <Suspense fallback={<LoadingScreen />}>
       <View params={params} />
     </Suspense>
   );

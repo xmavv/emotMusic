@@ -14,6 +14,9 @@ export default function Home() {
             <Link href="/spiderchart/58">SPIDERCHART</Link>
           </li>
           <li>
+            <Link href="/scatterplot">SCATTERPLOT</Link>
+          </li>
+          <li>
             <Link href="/pacmap">PACMAP</Link>
           </li>
           <li>
