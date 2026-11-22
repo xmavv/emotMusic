@@ -3,7 +3,8 @@
     {
       "files": [
         "app/scatterplot/**/*.{ts,tsx}",
-        "app/countriesmap/**/*.{ts,tsx}"
+        "app/countriesmap/**/*.{ts,tsx}",
+        "app/pacmap/**/*.{ts,tsx}"
       ],
       "options": {
         "printWidth": 120
