@@ -11,7 +11,7 @@ export default function Home() {
             <Link href="/countriesmap">COUNTRIESMAP</Link>
           </li>
           <li>
-            <Link href="/spiderchart/58">SPIDERCHART</Link>
+            <Link href="/spiderchart">SPIDERCHART</Link>
           </li>
           <li>
             <Link href="/scatterplot">SCATTERPLOT</Link>
