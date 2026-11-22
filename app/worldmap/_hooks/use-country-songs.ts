@@ -14,7 +14,7 @@ export function useCountrySongs(
   sortEmotion: PlutchikEmotion | null,
 ) {
   const [songs, setSongs] = useState<CountrySong[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
+  const [cursor, setCursor] = useState<number | null>(null);
   const [status, setStatus] = useState<SongsStatus>("loading");
 
   useEffect(() => {
@@ -26,10 +26,10 @@ export function useCountrySongs(
       if (year !== null) params.set("year", String(year));
       if (genre !== null) params.set("genre", genre);
       if (sortEmotion !== null) params.set("sort", sortEmotion);
-      if (cursor !== null) params.set("cursor", cursor);
+      if (cursor !== null) params.set("cursor", String(cursor));
 
       try {
-        const response = await fetch(`/worldmap/songs?${params}`, {
+        const response = await fetch(`/api/worldmap/songs?${params}`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error(response.statusText);

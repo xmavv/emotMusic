@@ -1,6 +1,6 @@
-import { LoadingScreen } from "@/app/components/loading-screen";
+import { LoadingScreen } from "@/components/loading-screen/loading-screen";
 import type { Metadata } from "next";
-import { VisualizationPage } from "@/app/components/visualization-page";
+import { VisualizationPage } from "@/components/visualization-page/visualization-page";
 import { Suspense } from "react";
 import { getArtistsLocations, getSongsAndEmotions } from "@/services/supabase/actions";
 import { EmotionTimeline } from "./emotion-timeline";
@@ -19,7 +19,7 @@ async function EmotionTimelineData() {
 export default function Page() {
 
   return (
-    <VisualizationPage title="SCATTERPLOT" description="Natężenie emocji w utworach według daty wydania.">
+    <VisualizationPage title="WYKRES PUNKTOWY" description="Natężenie emocji w utworach według daty wydania.">
       <Suspense fallback={<LoadingScreen />}>
         <EmotionTimelineData />
       </Suspense>

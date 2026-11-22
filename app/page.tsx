@@ -8,13 +8,13 @@ export default function Home() {
       <div className="h-full backdrop-brightness-30">
         <ul className="text-right text-3xl pt-4 pr-6 leading-15">
           <li>
-            <Link href="/worldmap">WORLDMAP</Link>
+            <Link href="/worldmap">MAPA ŚWIATA</Link>
           </li>
           <li>
-            <Link href="/spiderchart/58">SPIDERCHART</Link>
+            <Link href="/spiderchart/58">WYKRES RADAROWY</Link>
           </li>
           <li>
-            <Link href="/scatterplot">SCATTERPLOT</Link>
+            <Link href="/scatterplot">WYKRES PUNKTOWY</Link>
           </li>
           <li>
             <Link href="/pacmap">PACMAP</Link>

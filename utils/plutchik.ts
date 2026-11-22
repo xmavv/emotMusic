@@ -19,6 +19,35 @@ export type EmotionValues = Record<PlutchikEmotion, number>;
 
 export const PLUTCHIK_EMOTIONS = Object.keys(WHEEL) as PlutchikEmotion[];
 
+export const EMOTION_LABELS: Record<PlutchikEmotion, string> = {
+  joy: "radość",
+  trust: "zaufanie",
+  fear: "strach",
+  surprise: "zaskoczenie",
+  sadness: "smutek",
+  disgust: "wstręt",
+  anger: "złość",
+  anticipation: "oczekiwanie",
+};
+
+export const EMOTION_GENITIVE_LABELS: Record<PlutchikEmotion, string> = {
+  joy: "radości",
+  trust: "zaufania",
+  fear: "strachu",
+  surprise: "zaskoczenia",
+  sadness: "smutku",
+  disgust: "wstrętu",
+  anger: "złości",
+  anticipation: "oczekiwania",
+};
+
+export const mapEmotions = <Value>(
+  valueOf: (emotion: PlutchikEmotion) => Value,
+) =>
+  Object.fromEntries(
+    PLUTCHIK_EMOTIONS.map((emotion) => [emotion, valueOf(emotion)]),
+  ) as Record<PlutchikEmotion, Value>;
+
 export const INTENSITIES = [0, 1, 2] as const;
 export type Intensity = (typeof INTENSITIES)[number];
 

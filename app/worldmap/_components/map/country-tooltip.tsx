@@ -1,5 +1,5 @@
-import type { MapHover } from "@/app/worldmap/_components/worldmap";
 import type { CountryYearStats } from "@/app/worldmap/_data/stats";
+import { similarityLabel } from "@/app/worldmap/_lib/similarity";
 import {
   emotionColor,
   type EmotionValues,
@@ -9,6 +9,14 @@ import { shares } from "@/utils/shares";
 
 const TOOLTIP_WIDTH = 176;
 const CURSOR_GAP = 14;
+
+export interface MapHover {
+  code: string;
+  name: string;
+  x: number;
+  y: number;
+  mapWidth: number;
+}
 
 interface CountryTooltipProps {
   hover: MapHover;
@@ -45,7 +53,7 @@ export function CountryTooltip({
       </div>
       {similarity !== undefined && (
         <p className="text-xs text-neutral-400">
-          {Math.round(similarity * 100)}% like the rest
+          {similarityLabel(similarity)} podobieństwa do reszty
         </p>
       )}
       <ShareBar emotions={stats.averageEmotions} active={active} />

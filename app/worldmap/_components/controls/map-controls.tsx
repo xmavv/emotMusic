@@ -1,13 +1,24 @@
+import type { ColorMode } from "@/app/worldmap/_lib/similarity";
 import { findGenreGroup, GENRE_GROUPS, type GenreGroup } from "@/utils/genres";
 
+const COLOR_MODES: { mode: ColorMode; label: string }[] = [
+  { mode: "strongest", label: "Najsilniejsze" },
+  { mode: "similarity", label: "Podobieństwo" },
+];
+
 const BUTTON_CLASS =
-  "block h-6.5 max-w-28 cursor-pointer appearance-none overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-neutral-700 bg-neutral-950 pl-3 pr-7 leading-6 outline-none scheme-dark field-sizing-content hover:text-neutral-100 focus-visible:border-neutral-400 sm:max-w-48";
+  "block h-6.5 max-w-31 cursor-pointer appearance-none overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-neutral-700 bg-neutral-950 pl-3 pr-7 leading-6 outline-none scheme-dark field-sizing-content hover:text-neutral-100 focus-visible:border-neutral-400 sm:max-w-48";
 const CUSTOM_LIST_CLASS =
   "supports-[appearance:base-select]:[appearance:base-select] [&::picker-icon]:hidden supports-[appearance:base-select]:[&::picker(select)]:[appearance:base-select]";
 const LIST_CLASS =
   "[&::picker(select)]:mt-1.5 [&::picker(select)]:rounded-xl [&::picker(select)]:border [&::picker(select)]:border-neutral-800 [&::picker(select)]:bg-neutral-900 [&::picker(select)]:p-1 [&::picker(select)]:text-neutral-300 [&::picker(select)]:shadow-xl";
 const OPTION_CLASS =
   "min-h-0 cursor-pointer rounded-lg px-3 py-1.5 outline-none checked:text-amber-300 hover:bg-neutral-800 focus-visible:bg-neutral-800 [&::checkmark]:hidden";
+
+interface ColorModeSwitchProps {
+  colorMode: ColorMode;
+  onColorModeChange: (mode: ColorMode) => void;
+}
 
 interface GenreSelectProps {
   genre: GenreGroup | null;
@@ -16,7 +27,48 @@ interface GenreSelectProps {
   onGenreChange: (genre: GenreGroup | null) => void;
 }
 
-export function GenreSelect({
+export function MapControls({
+  colorMode,
+  onColorModeChange,
+  ...genreProps
+}: ColorModeSwitchProps & GenreSelectProps) {
+  return (
+    <>
+      <ColorModeSwitch
+        colorMode={colorMode}
+        onColorModeChange={onColorModeChange}
+      />
+      <GenreSelect {...genreProps} />
+    </>
+  );
+}
+
+function ColorModeSwitch({
+  colorMode,
+  onColorModeChange,
+}: ColorModeSwitchProps) {
+  return (
+    <div
+      role="group"
+      aria-label="Koloruj kraje według"
+      className="flex rounded-full border border-neutral-700 bg-neutral-950 p-0.5 text-xs text-neutral-400"
+    >
+      {COLOR_MODES.map(({ mode, label }) => (
+        <button
+          key={mode}
+          type="button"
+          aria-pressed={mode === colorMode}
+          onClick={() => onColorModeChange(mode)}
+          className={`cursor-pointer rounded-full px-2.5 py-0.5 ${mode === colorMode ? "bg-neutral-800 text-neutral-100" : "hover:text-neutral-100"}`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function GenreSelect({
   genre,
   isLoading,
   failed,
@@ -26,7 +78,7 @@ export function GenreSelect({
     <div className="flex items-center gap-3 text-xs text-neutral-400">
       <div className={`relative ${isLoading ? "animate-pulse" : ""}`}>
         <select
-          aria-label="Genre"
+          aria-label="Gatunek"
           aria-busy={isLoading}
           value={genre ?? ""}
           onChange={(ev) =>
@@ -35,7 +87,7 @@ export function GenreSelect({
           className={`${BUTTON_CLASS} ${CUSTOM_LIST_CLASS} ${LIST_CLASS} ${genre ? "text-neutral-100" : ""}`}
         >
           <option value="" className={OPTION_CLASS}>
-            All genres
+            Wszystkie gatunki
           </option>
           {GENRE_GROUPS.map(({ id, label }) => (
             <option key={id} value={id} className={OPTION_CLASS}>
@@ -56,7 +108,7 @@ export function GenreSelect({
           <path d="M1.5 3.5 5 7l3.5-3.5" />
         </svg>
       </div>
-      {failed && <span role="alert">Could not load genre.</span>}
+      {failed && <span role="alert">Nie udało się wczytać gatunku.</span>}
     </div>
   );
 }

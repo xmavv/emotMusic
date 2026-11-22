@@ -1,14 +1,15 @@
-import { FEW_SONGS_LIMIT } from "@/app/worldmap/_constants/map";
 import type {
   CountryYearStats,
   StatsByCountry,
 } from "@/app/worldmap/_data/stats";
-import { worldStats } from "@/app/worldmap/_lib/merge-stats";
 import {
+  mapEmotions,
   PLUTCHIK_EMOTIONS,
   type EmotionValues,
   type PlutchikEmotion,
 } from "@/utils/plutchik";
+
+const MIN_SONGS_TO_COMPARE = 5;
 
 export const SIMILARITY_COLORS = [
   "#cde2fb",
@@ -38,12 +39,7 @@ export function restOfWorld(
       country.averageEmotions[emotion] * country.songCount) /
     restSongCount;
 
-  return Object.fromEntries(
-    PLUTCHIK_EMOTIONS.map((emotion) => [
-      emotion,
-      Math.max(0, restAverage(emotion)),
-    ]),
-  ) as EmotionValues;
+  return mapEmotions((emotion) => Math.max(0, restAverage(emotion)));
 }
 
 export function similarityBetween(
@@ -59,10 +55,11 @@ export function similarityBetween(
   return union === 0 ? 1 : overlap / union;
 }
 
-export function similarityToRest(statsByCountry: StatsByCountry): Similarities {
-  const world = worldStats(statsByCountry);
+export function similarityToRest(
+  statsByCountry: StatsByCountry,
+  world: CountryYearStats,
+): Similarities {
   const similarities: Similarities = {};
-  if (!world) return similarities;
 
   for (const [code, stats] of Object.entries(statsByCountry)) {
     const rest = restOfWorld(world, stats);
@@ -72,7 +69,7 @@ export function similarityToRest(statsByCountry: StatsByCountry): Similarities {
   return similarities;
 }
 
-export function mostSimilarCountries(
+export function countriesBySimilarity(
   statsByCountry: StatsByCountry,
   code: string,
 ): SimilarCountry[] {
@@ -81,7 +78,7 @@ export function mostSimilarCountries(
   return Object.entries(statsByCountry)
     .filter(
       ([otherCode, { songCount }]) =>
-        otherCode !== code && songCount >= FEW_SONGS_LIMIT,
+        otherCode !== code && songCount >= MIN_SONGS_TO_COMPARE,
     )
     .map(([otherCode, other]) => ({
       code: otherCode,
@@ -94,3 +91,6 @@ export function similarityColor(similarity: number): string {
   const step = Math.floor(similarity * SIMILARITY_COLORS.length);
   return SIMILARITY_COLORS[Math.min(step, SIMILARITY_COLORS.length - 1)];
 }
+
+export const similarityLabel = (similarity: number) =>
+  `${Math.round(similarity * 100)}%`;

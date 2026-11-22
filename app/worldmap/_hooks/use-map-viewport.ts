@@ -1,6 +1,7 @@
 import { useEffect, useState, type RefObject } from "react";
-import { PANEL_BESIDE_MAP_QUERY } from "@/app/worldmap/_constants/map";
 import type { MapViewport } from "@/app/worldmap/_lib/map-view";
+
+const PANEL_BESIDE_MAP_QUERY = "(min-width: 64rem)";
 
 export function useMapViewport(
   mapRef: RefObject<SVGSVGElement | null>,

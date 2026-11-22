@@ -38,14 +38,3 @@ export const getArtistsLocations = async (): Promise<Artist[]> => {
   if (error) throw new Error(error.message);
   return data;
 };
-
-export const getArtistLocation = async (id: number): Promise<Artist | null> => {
-  const { data, error } = await supabaseClient
-    .from(TABLES.LOCATIONS)
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error) throw new Error(error.message);
-  return data;
-};

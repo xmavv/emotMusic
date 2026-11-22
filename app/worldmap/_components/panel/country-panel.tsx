@@ -1,9 +1,20 @@
 import type { CSSProperties, ReactNode } from "react";
-import { PANEL_WIDTH } from "@/app/worldmap/_constants/map";
+import { PANEL_WIDTH } from "@/app/worldmap/_constants";
+import { ALL_TIME_LABEL } from "@/components/timeline/timeline";
 
 const PANEL_WIDTH_VARIABLE = {
   "--panel-width": `${PANEL_WIDTH}px`,
 } as CSSProperties;
+
+const pluralRules = new Intl.PluralRules("pl");
+const SONG_PLURALS: Record<Intl.LDMLPluralRule, string> = {
+  zero: "utworów",
+  one: "utwór",
+  two: "utwory",
+  few: "utwory",
+  many: "utworów",
+  other: "utworu",
+};
 
 interface CountryPanelProps {
   name: string;
@@ -32,7 +43,7 @@ export function CountryPanel({
         <div className="min-w-0">
           <h2 className="text-2xl">{name}</h2>
           <p className="text-sm text-neutral-500">
-            {year ?? "All time"}
+            {year ?? ALL_TIME_LABEL}
             {genreLabel && ` · ${genreLabel}`}
             {songCount > 0 && ` · ${songCountLabel(songCount)}`}
           </p>
@@ -40,7 +51,7 @@ export function CountryPanel({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Back to the world map"
+          aria-label="Wróć do mapy świata"
           className="cursor-pointer text-xl text-neutral-500 hover:text-neutral-100"
         >
           ✕
@@ -51,8 +62,9 @@ export function CountryPanel({
         children
       ) : (
         <p className="mt-5 text-sm text-neutral-400">
-          No {genreLabel && `${genreLabel.toLowerCase()} `}songs
-          {year && ` in ${year}`}.
+          Brak utworów
+          {genreLabel && ` z gatunku „${genreLabel}”`}
+          {year && ` w roku ${year}`}.
         </p>
       )}
     </aside>
@@ -60,4 +72,4 @@ export function CountryPanel({
 }
 
 const songCountLabel = (count: number) =>
-  count === 1 ? "1 song" : `${count} songs`;
+  `${count} ${SONG_PLURALS[pluralRules.select(count)]}`;

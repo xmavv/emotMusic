@@ -1,10 +1,7 @@
-import {
-  MAX_ZOOM,
-  PANEL_GAP,
-  PANEL_WIDTH,
-} from "@/app/worldmap/_constants/map";
+import { MAX_ZOOM, PANEL_WIDTH } from "@/app/worldmap/_constants";
 import type { Bounds } from "@/app/worldmap/_lib/country-bounds";
 
+const PANEL_GAP = 16;
 const COUNTRY_PADDING_RATIO = 0.07;
 
 export interface MapView {

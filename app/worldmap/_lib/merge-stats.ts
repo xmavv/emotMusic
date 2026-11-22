@@ -3,23 +3,21 @@ import type {
   StatsByCountry,
   StatsByYear,
 } from "@/app/worldmap/_data/stats";
-import { PLUTCHIK_EMOTIONS, type EmotionValues } from "@/utils/plutchik";
+import { mapEmotions, type PlutchikEmotion } from "@/utils/plutchik";
 
 function mergeStats(
   first: CountryYearStats,
   second: CountryYearStats,
 ): CountryYearStats {
   const songCount = first.songCount + second.songCount;
-  const weightedAverage = (emotion: keyof EmotionValues) =>
+  const weightedAverage = (emotion: PlutchikEmotion) =>
     (first.averageEmotions[emotion] * first.songCount +
       second.averageEmotions[emotion] * second.songCount) /
     songCount;
 
   return {
     songCount,
-    averageEmotions: Object.fromEntries(
-      PLUTCHIK_EMOTIONS.map((emotion) => [emotion, weightedAverage(emotion)]),
-    ) as EmotionValues,
+    averageEmotions: mapEmotions(weightedAverage),
   };
 }
 

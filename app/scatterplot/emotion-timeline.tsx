@@ -2,9 +2,9 @@
 
 import { useMemo, useState, type CSSProperties } from "react";
 import type { Artist, SongEmotion } from "@/services/supabase/tables";
-import { dateFormat, emotions, scoreFormat } from "@/app/components/song-emotions";
-import { SongDetailsModal } from "@/app/components/song-details-modal";
-import { getSongGenres, getSongDate } from "@/lib/songs";
+import { dateFormat, emotions, scoreFormat } from "@/components/song/song-emotions";
+import { SongDetailsModal } from "@/components/song/song-details-modal";
+import { getSongGenres, getSongDate } from "@/utils/songs";
 import { SongScatterPlot } from "./song-scatter-plot";
 
 function getPlottableSongGenres(songs: readonly SongEmotion[]) {

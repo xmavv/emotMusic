@@ -1,5 +1,3 @@
-"use client";
-
 import { geoIdentity, type GeoProjection } from "d3-geo";
 import {
   useMemo,
@@ -8,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { ComposableMap, ZoomableGroup } from "react-simple-maps";
-import { MAP_SIZE_CLASS, MAX_ZOOM } from "@/app/worldmap/_constants/map";
+import { MAP_SIZE_CLASS, MAX_ZOOM } from "@/app/worldmap/_constants";
 import { useAnimatedView } from "@/app/worldmap/_hooks/use-animated-view";
 import { useMapViewport } from "@/app/worldmap/_hooks/use-map-viewport";
 import type { Bounds } from "@/app/worldmap/_lib/country-bounds";
@@ -36,12 +34,16 @@ export function ZoomableMap({
   const pressedAt = useRef<{ x: number; y: number } | null>(null);
   const viewport = useMapViewport(mapRef);
 
+  const wholeWorld = useMemo(
+    () => worldView({ width, height }),
+    [width, height],
+  );
   const targetView = useMemo(
     () =>
       focus && viewport
         ? countryView(focus, { width, height }, viewport)
-        : worldView({ width, height }),
-    [focus, viewport, width, height],
+        : wholeWorld,
+    [focus, viewport, width, height, wholeWorld],
   );
   const { view, stopAnimation, trackUserMove } = useAnimatedView(targetView);
 
@@ -67,7 +69,7 @@ export function ZoomableMap({
       projection={IDENTITY}
       className={MAP_SIZE_CLASS}
       role="img"
-      aria-label="World map coloured by the dominant emotion in each country's songs"
+      aria-label="Mapa świata z krajami pokolorowanymi według emocji w utworach"
       onPointerDown={(ev) => {
         pressedAt.current = { x: ev.clientX, y: ev.clientY };
       }}

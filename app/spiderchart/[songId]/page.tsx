@@ -1,4 +1,4 @@
-import { LoadingScreen } from "@/app/components/loading-screen";
+import { LoadingScreen } from "@/components/loading-screen/loading-screen";
 import { Suspense } from "react";
 import { Spiderchart } from "@/app/spiderchart/[songId]/spiderchart";
 

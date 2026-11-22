@@ -22,7 +22,7 @@ export function WorldmapLayout({
       <header className="absolute left-5 top-2 z-10 flex h-8 items-center gap-4">
         <Link
           href="/"
-          aria-label="Back"
+          aria-label="Wróć"
           className="text-neutral-500 hover:text-neutral-100"
         >
           <svg
