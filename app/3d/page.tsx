@@ -1,4 +1,4 @@
-import { LoadingScreen } from "@/app/components/loading-screen";
+import { LoadingScreen } from "@/components/loading-screen/loading-screen";
 import { Suspense } from "react";
 import { D3 } from "@/app/3d/3d";
 

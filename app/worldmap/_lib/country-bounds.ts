@@ -44,20 +44,20 @@ function distanceBetween(a: Bounds, b: Bounds): number {
 }
 
 export function countryBounds(svgPath: string): Bounds | null {
-  const parts = subpaths(svgPath).map(boundsOf);
+  const parts = subpaths(svgPath).map((points) => ({
+    points,
+    bounds: boundsOf(points),
+  }));
   if (parts.length === 0) return null;
 
   const mainland = parts.reduce((largest, part) =>
-    areaOf(part) > areaOf(largest) ? part : largest,
+    areaOf(part.bounds) > areaOf(largest.bounds) ? part : largest,
   );
   const nearbyParts = parts.filter(
-    (part) => distanceBetween(mainland, part) <= MAX_DISTANCE_FROM_MAINLAND,
+    (part) =>
+      distanceBetween(mainland.bounds, part.bounds) <=
+      MAX_DISTANCE_FROM_MAINLAND,
   );
 
-  return {
-    left: Math.min(...nearbyParts.map(({ left }) => left)),
-    top: Math.min(...nearbyParts.map(({ top }) => top)),
-    right: Math.max(...nearbyParts.map(({ right }) => right)),
-    bottom: Math.max(...nearbyParts.map(({ bottom }) => bottom)),
-  };
+  return boundsOf(nearbyParts.flatMap(({ points }) => points));
 }

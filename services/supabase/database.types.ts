@@ -155,36 +155,11 @@ export type Database = {
       country_songs: {
         Args: {
           country_code: string;
-          cursor_date?: string;
           cursor_id?: number;
           page_size: number;
           song_genre?: string;
           song_year?: number;
-        };
-        Returns: {
-          anger: number;
-          anticipation: number;
-          artist: string;
-          date: string;
-          disgust: number;
-          fear: number;
-          genre: string;
-          id: number;
-          joy: number;
-          name: string;
-          sadness: number;
-          surprise: number;
-          trust: number;
-        }[];
-      };
-      country_songs_by_emotion: {
-        Args: {
-          country_code: string;
-          cursor_id?: number;
-          emotion: string;
-          page_size: number;
-          song_genre?: string;
-          song_year?: number;
+          sort_emotion?: string;
         };
         Returns: {
           anger: number;

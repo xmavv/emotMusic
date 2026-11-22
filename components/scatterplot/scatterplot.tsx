@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties, type ReactNode } from "react";
 
-export type ScatterPoint = {
+type ScatterPoint = {
   id: string | number;
   x: number;
   y: number;

@@ -1,5 +1,5 @@
 import type { StatsByYear } from "@/app/worldmap/_data/stats";
-import { PLUTCHIK_EMOTIONS, type PlutchikEmotion } from "@/utils/plutchik";
+import { mapEmotions, type PlutchikEmotion } from "@/utils/plutchik";
 
 export interface ShadeThresholds {
   medium: number;
@@ -23,7 +23,5 @@ export function emotionThresholds(statsByYear: StatsByYear): EmotionThresholds {
     return { medium: valueAt(1 / 3), strong: valueAt(2 / 3) };
   };
 
-  return Object.fromEntries(
-    PLUTCHIK_EMOTIONS.map((emotion) => [emotion, thresholdsOf(emotion)]),
-  ) as EmotionThresholds;
+  return mapEmotions(thresholdsOf);
 }

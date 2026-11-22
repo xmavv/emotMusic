@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { SONGS_PER_PAGE } from "@/app/worldmap/_constants/songs";
+import { SONGS_PER_PAGE } from "@/app/worldmap/_constants";
 import type { CountrySong } from "@/app/worldmap/_data/songs";
 import { useCountrySongs } from "@/app/worldmap/_hooks/use-country-songs";
 import type { GenreGroup } from "@/utils/genres";
-import { emotionColor, type PlutchikEmotion } from "@/utils/plutchik";
+import {
+  EMOTION_LABELS,
+  emotionColor,
+  type PlutchikEmotion,
+} from "@/utils/plutchik";
 import { shares } from "@/utils/shares";
 
 const SCROLL_AREA_CLASS =
@@ -59,13 +63,13 @@ export function SongList({
         {status === "hasMore" && <LoadMoreTrigger onReached={loadMore} />}
         {status === "failed" && (
           <li className="flex h-12 items-center justify-between text-sm text-neutral-400">
-            Could not load songs.
+            Nie udało się wczytać utworów.
             <button
               type="button"
               onClick={loadMore}
               className="cursor-pointer hover:text-neutral-100"
             >
-              Retry
+              Ponów
             </button>
           </li>
         )}
@@ -132,7 +136,7 @@ function SongRow({
               className="h-2 w-2 rounded-full"
               style={{ background: emotionColor(shownEmotion) }}
             />
-            {shownEmotion}
+            {EMOTION_LABELS[shownEmotion]}
             {sortEmotion && (
               <span className="tabular-nums">
                 {song.emotions[sortEmotion].toFixed(2)}

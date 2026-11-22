@@ -1,8 +1,8 @@
 import type { Artist, SongEmotion } from "@/services/supabase/tables";
-import { getSongGenres, getSongDate } from "@/lib/songs";
-import { DetailsModal } from "./details-modal";
-import { SongEmotionScores } from "./song-emotion-scores";
-import { dateFormat } from "./song-emotions";
+import { getSongGenres, getSongDate } from "@/utils/songs";
+import { DetailsModal } from "@/components/details-modal/details-modal";
+import { SongEmotionScores } from "@/components/song/song-emotion-scores";
+import { dateFormat } from "@/components/song/song-emotions";
 
 const countryNames = new Intl.DisplayNames("pl", {
   type: "region",
@@ -12,11 +12,9 @@ const countryNames = new Intl.DisplayNames("pl", {
 export function SongDetailsModal({
   song,
   artist,
-  triggerLabel = "Szczegóły utworu",
 }: {
   song: SongEmotion;
   artist?: Artist | null;
-  triggerLabel?: string;
 }) {
   const date = getSongDate(song);
   const country = artist?.country?.trim();
@@ -28,7 +26,7 @@ export function SongDetailsModal({
   return (
     <DetailsModal
       title={song.name || "Utwór bez tytułu"}
-      triggerLabel={triggerLabel}
+      triggerLabel="Szczegóły utworu"
       sections={{
         Wykonawca: {
           Nazwa: artist?.artist?.trim(),

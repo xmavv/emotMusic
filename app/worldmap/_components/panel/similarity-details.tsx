@@ -1,7 +1,12 @@
 import {
+  EMOTION_ROW_CLASS,
+  EmotionRow,
+} from "@/app/worldmap/_components/panel/emotion-row";
+import {
   restOfWorld,
   similarityBetween,
   similarityColor,
+  similarityLabel,
   type SimilarCountry,
 } from "@/app/worldmap/_lib/similarity";
 import type { CountryYearStats } from "@/app/worldmap/_data/stats";
@@ -12,36 +17,40 @@ import {
   type PlutchikEmotion,
 } from "@/utils/plutchik";
 
+const LISTED_COUNTRIES = 5;
 const FULL_BAR_DIFFERENCE = 0.5;
-const DIFFERENCE_ROW_CLASS =
-  "grid grid-cols-[6rem_1fr_2.5rem] items-center gap-2";
 
-export interface NamedSimilarCountry extends SimilarCountry {
+interface NamedSimilarCountry extends SimilarCountry {
   name: string;
 }
 
 interface SimilarityDetailsProps {
   stats: CountryYearStats;
   world: CountryYearStats;
-  mostSimilar: NamedSimilarCountry[];
+  mostSimilarFirst: NamedSimilarCountry[];
   onCountrySelect: (code: string) => void;
 }
 
 export function SimilarityDetails({
   stats,
   world,
-  mostSimilar,
+  mostSimilarFirst,
   onCountrySelect,
 }: SimilarityDetailsProps) {
   const rest = restOfWorld(world, stats);
   if (!rest)
     return (
       <p className="mt-5 text-sm text-neutral-400">
-        No other countries to compare with.
+        Brak innych krajów do porównania.
       </p>
     );
 
   const similarity = similarityBetween(stats.averageEmotions, rest);
+  const mostSimilar = mostSimilarFirst.slice(0, LISTED_COUNTRIES);
+  const leastSimilar = mostSimilarFirst
+    .slice(LISTED_COUNTRIES)
+    .slice(-LISTED_COUNTRIES)
+    .reverse();
 
   return (
     <>
@@ -51,33 +60,59 @@ export function SimilarityDetails({
           style={{ background: similarityColor(similarity) }}
         />
         <span className="text-2xl text-neutral-100">
-          {toWholePercent(similarity)}
+          {similarityLabel(similarity)}
         </span>
-        like the rest of the world
+        podobieństwa do reszty świata
       </p>
       <DifferenceList country={stats.averageEmotions} rest={rest} />
-      {mostSimilar.length > 0 && (
-        <section aria-label="Most similar countries" className="mt-6">
-          <h3 className="text-sm text-neutral-500">Most similar</h3>
-          <ul className="mt-2">
-            {mostSimilar.map(({ code, name, similarity }) => (
-              <li key={code}>
-                <button
-                  type="button"
-                  onClick={() => onCountrySelect(code)}
-                  className="flex w-full cursor-pointer justify-between gap-3 py-1.5 text-left text-sm text-neutral-300 hover:text-neutral-100"
-                >
-                  <span className="truncate">{name}</span>
-                  <span className="tabular-nums text-neutral-400">
-                    {toWholePercent(similarity)}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <div className="mt-5 flex gap-6 *:min-w-0 *:flex-1">
+        <CountryList
+          title="Najbardziej podobne"
+          countries={mostSimilar}
+          onCountrySelect={onCountrySelect}
+        />
+        <CountryList
+          title="Najmniej podobne"
+          countries={leastSimilar}
+          onCountrySelect={onCountrySelect}
+        />
+      </div>
     </>
+  );
+}
+
+function CountryList({
+  title,
+  countries,
+  onCountrySelect,
+}: {
+  title: string;
+  countries: NamedSimilarCountry[];
+  onCountrySelect: (code: string) => void;
+}) {
+  if (countries.length === 0) return null;
+
+  return (
+    <section aria-label={`${title} kraje`}>
+      <h3 className="text-sm text-neutral-500">{title}</h3>
+      <ul className="mt-1.5">
+        {countries.map(({ code, name, similarity }) => (
+          <li key={code}>
+            <button
+              type="button"
+              onClick={() => onCountrySelect(code)}
+              title={name}
+              className="flex w-full cursor-pointer justify-between gap-3 py-0.5 text-left text-sm text-neutral-300 hover:text-neutral-100"
+            >
+              <span className="truncate">{name}</span>
+              <span className="tabular-nums text-neutral-400">
+                {similarityLabel(similarity)}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -95,15 +130,15 @@ function DifferenceList({
 
   return (
     <div className="mt-4 text-sm">
-      <div className={`${DIFFERENCE_ROW_CLASS} text-xs text-neutral-500`}>
+      <div className={`${EMOTION_ROW_CLASS} text-xs text-neutral-500`}>
         <span />
         <span className="flex justify-between">
-          <span>less</span>
-          <span>more</span>
+          <span>mniej</span>
+          <span>więcej</span>
         </span>
         <span />
       </div>
-      <ul className="mt-2 space-y-2">
+      <ul className="mt-2 space-y-1.5">
         {differences.map((row) => (
           <DifferenceRow key={row.emotion} {...row} />
         ))}
@@ -123,24 +158,20 @@ function DifferenceRow({
   const isMore = difference > 0;
 
   return (
-    <li className={`${DIFFERENCE_ROW_CLASS} leading-5 text-neutral-300`}>
-      <span>{emotion}</span>
-      <span className="relative h-2 bg-neutral-800">
+    <li className={`${EMOTION_ROW_CLASS} leading-5 text-neutral-300`}>
+      <EmotionRow
+        emotion={emotion}
+        markerPosition="50%"
+        value={signedDifference(difference)}
+      >
         <span
           className={`absolute inset-y-0 transition-[width] duration-300 ${isMore ? "left-1/2 rounded-r-full" : "right-1/2 rounded-l-full"}`}
           style={{ width: `${barWidth}%`, background: emotionColor(emotion) }}
         />
-        <span className="absolute -inset-y-0.5 left-1/2 w-0.5 -translate-x-1/2 bg-neutral-100" />
-      </span>
-      <span className="text-right tabular-nums text-neutral-400">
-        {signedDifference(difference)}
-      </span>
+      </EmotionRow>
     </li>
   );
 }
-
-const toWholePercent = (similarity: number) =>
-  `${Math.round(similarity * 100)}%`;
 
 function signedDifference(difference: number): string {
   const size = Math.abs(difference).toFixed(2);

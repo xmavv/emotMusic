@@ -1,7 +1,7 @@
 import type { SongEmotion } from "@/services/supabase/tables";
-import { dateFormat, emotions, scoreFormat } from "@/app/components/song-emotions";
-import { Scatterplot } from "@/app/components/scatterplot";
-import { getSongGenres, getSongDate } from "@/lib/songs";
+import { dateFormat, emotions, scoreFormat } from "@/components/song/song-emotions";
+import { Scatterplot } from "@/components/scatterplot/scatterplot";
+import { getSongGenres, getSongDate } from "@/utils/songs";
 
 export function SongScatterPlot({
   songs,

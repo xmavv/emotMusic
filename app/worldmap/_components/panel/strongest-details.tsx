@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { SongList } from "@/app/worldmap/_components/song-list";
+import {
+  EMOTION_ROW_CLASS,
+  EmotionRow,
+} from "@/app/worldmap/_components/panel/emotion-row";
+import { SongList } from "@/app/worldmap/_components/panel/song-list";
 import type { CountryYearStats } from "@/app/worldmap/_data/stats";
 import type { GenreGroup } from "@/utils/genres";
-import { emotionColor, type PlutchikEmotion } from "@/utils/plutchik";
+import {
+  EMOTION_GENITIVE_LABELS,
+  emotionColor,
+  type PlutchikEmotion,
+} from "@/utils/plutchik";
 
 interface StrongestDetailsProps {
   code: string;
@@ -38,7 +46,7 @@ export function StrongestDetails({
         onSortChange={setChosenEmotion}
       />
       <section
-        aria-label="Songs"
+        aria-label="Utwory"
         className="mt-5 lg:flex lg:min-h-48 lg:flex-1 lg:flex-col"
       >
         <SortHeader
@@ -47,7 +55,7 @@ export function StrongestDetails({
           onSortChange={setChosenEmotion}
         />
         <SongList
-          key={`${year}-${genre}-${sortEmotion}`}
+          key={`${code}-${year}-${genre}-${sortEmotion}`}
           country={code}
           year={year}
           genre={genre}
@@ -76,7 +84,7 @@ function SortHeader({
 
   return (
     <div className="flex items-baseline justify-between text-sm text-neutral-500">
-      <h3>Songs</h3>
+      <h3>Utwory</h3>
       <div className="flex gap-3 text-xs">
         <button
           type="button"
@@ -84,7 +92,7 @@ function SortHeader({
           onClick={() => onSortChange(null)}
           className={buttonClass(sortEmotion === null)}
         >
-          Newest
+          Najnowsze
         </button>
         {strongestEmotion && (
           <button
@@ -93,7 +101,7 @@ function SortHeader({
             onClick={() => onSortChange(strongestEmotion)}
             className={buttonClass(sortEmotion !== null)}
           >
-            Most {strongestEmotion}
+            Najwięcej {EMOTION_GENITIVE_LABELS[strongestEmotion]}
           </button>
         )}
       </div>
@@ -130,7 +138,7 @@ function EmotionProfile({
       </ul>
       <p className="mt-3 flex items-center gap-2 text-xs text-neutral-500">
         <span className="h-3 w-0.5 bg-neutral-100" />
-        world average
+        średnia światowa
       </p>
     </>
   );
@@ -155,11 +163,14 @@ function EmotionBar({
         type="button"
         onClick={onClick}
         aria-pressed={isSorting}
-        title={`Sort songs by ${emotion}`}
-        className={`grid w-full cursor-pointer grid-cols-[6rem_1fr_2rem] items-center gap-2 text-left text-sm leading-5 hover:text-neutral-100 ${isSorting ? "font-semibold text-neutral-100" : "text-neutral-300"}`}
+        title={`Sortuj utwory według ${EMOTION_GENITIVE_LABELS[emotion]}`}
+        className={`${EMOTION_ROW_CLASS} w-full cursor-pointer text-left text-sm leading-5 hover:text-neutral-100 ${isSorting ? "font-semibold text-neutral-100" : "text-neutral-300"}`}
       >
-        <span>{emotion}</span>
-        <span className="relative h-2 rounded-full bg-neutral-800">
+        <EmotionRow
+          emotion={emotion}
+          markerPosition={toPercent(worldValue)}
+          value={value.toFixed(2)}
+        >
           <span
             className="block h-full rounded-full transition-[width] duration-300"
             style={{
@@ -167,14 +178,7 @@ function EmotionBar({
               background: emotionColor(emotion),
             }}
           />
-          <span
-            className="absolute -inset-y-0.5 w-0.5 -translate-x-1/2 bg-neutral-100 transition-[left] duration-300"
-            style={{ left: toPercent(worldValue) }}
-          />
-        </span>
-        <span className="text-right tabular-nums text-neutral-400">
-          {value.toFixed(2)}
-        </span>
+        </EmotionRow>
       </button>
     </li>
   );

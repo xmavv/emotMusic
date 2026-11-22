@@ -6,7 +6,9 @@ async function fetchGenreStats(
   genre: GenreGroup,
   signal: AbortSignal,
 ): Promise<StatsByYear> {
-  const response = await fetch(`/worldmap/stats?genre=${genre}`, { signal });
+  const response = await fetch(`/api/worldmap/stats?genre=${genre}`, {
+    signal,
+  });
   if (!response.ok) throw new Error(response.statusText);
   return response.json();
 }
