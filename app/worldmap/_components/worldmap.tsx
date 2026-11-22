@@ -1,60 +1,93 @@
 "use client";
 
-import { geoIdentity, type GeoProjection } from "d3-geo";
-import { ComposableMap, ZoomableGroup } from "react-simple-maps";
+import { Fragment, memo } from "react";
+import { FewSongsPattern } from "@/app/worldmap/_components/few-songs-pattern";
+import { ZoomableMap } from "@/app/worldmap/_components/zoomable-map";
 import {
   COUNTRY_BORDER,
   EMPTY_COUNTRY_COLOR,
-  MAP_SIZE_CLASS,
+  FEW_SONGS_LIMIT,
+  FEW_SONGS_PATTERN_ID,
 } from "@/app/worldmap/_constants/map";
-import type { MapGeometry } from "@/app/worldmap/_data/world-shapes";
-
-const IDENTITY = geoIdentity() as unknown as GeoProjection;
+import type {
+  CountryYearStats,
+  StatsByCountry,
+} from "@/app/worldmap/_data/stats";
+import type {
+  CountryShape,
+  MapGeometry,
+} from "@/app/worldmap/_data/world-shapes";
+import type { EmotionThresholds } from "@/app/worldmap/_lib/emotion-thresholds";
+import { countryColor } from "@/app/worldmap/_lib/country-color";
+import {
+  similarityColor,
+  type Similarities,
+} from "@/app/worldmap/_lib/similarity";
+import type { PlutchikEmotion } from "@/utils/plutchik";
 
 export interface MapHover {
   code: string | null;
   name: string;
   x: number;
   y: number;
+  mapWidth: number;
 }
 
 interface WorldmapProps {
   geometry: MapGeometry;
-  colorOf: (code: string | null) => string | null;
-  onHover: (hover: MapHover) => void;
+  stats: StatsByCountry;
+  clickableStats: StatsByCountry;
+  thresholds: EmotionThresholds;
+  similarities: Similarities | null;
+  active: PlutchikEmotion[];
+  selectedShape: CountryShape | undefined;
+  onHover: (hover: MapHover | null) => void;
+  onMapClick: (code: string | null) => void;
 }
 
-export function Worldmap({
+export const Worldmap = memo(function Worldmap({
   geometry: { shapes, width, height },
-  colorOf,
+  stats,
+  clickableStats,
+  thresholds,
+  similarities,
+  active,
+  selectedShape,
   onHover,
+  onMapClick,
 }: WorldmapProps) {
+  const colorOf = (code: string, { averageEmotions }: CountryYearStats) => {
+    if (!similarities) return countryColor(averageEmotions, active, thresholds);
+    return code in similarities ? similarityColor(similarities[code]) : null;
+  };
+
   return (
-    <ComposableMap
+    <ZoomableMap
       width={width}
       height={height}
-      projection={IDENTITY}
-      className={MAP_SIZE_CLASS}
-      role="img"
-      aria-label="World map coloured by the dominant emotion in each country's songs"
+      focus={selectedShape?.bounds ?? null}
+      onMapClick={onMapClick}
     >
-      <ZoomableGroup
-        center={[width / 2, height / 2]}
-        maxZoom={8}
-        translateExtent={[
-          [0, 0],
-          [width, height],
-        ]}
-      >
-        {shapes.map((shape, i) => {
-          const color = colorOf(shape.code);
-          return (
+      <FewSongsPattern />
+      {shapes.map((shape, i) => {
+        const countryStats = shape.code ? stats[shape.code] : undefined;
+        const color =
+          shape.code && countryStats ? colorOf(shape.code, countryStats) : null;
+        const hasFewSongs =
+          color !== null &&
+          countryStats !== undefined &&
+          countryStats.songCount < FEW_SONGS_LIMIT;
+        const isClickable = shape.code !== null && shape.code in clickableStats;
+        const isDimmed = selectedShape !== undefined && shape !== selectedShape;
+
+        return (
+          <Fragment key={shape.code ?? `x${i}`}>
             <path
-              key={shape.code ?? `x${i}`}
               d={shape.d}
+              data-code={shape.code ?? ""}
               {...COUNTRY_BORDER}
               fill={color ?? EMPTY_COUNTRY_COLOR}
-              className={`transition-[fill] duration-300 ${color ? "hover:brightness-125" : ""}`}
+              className={`transition-[fill,opacity] duration-300 ${color ? "hover:brightness-125" : ""} ${isClickable ? "cursor-pointer" : ""} ${isDimmed ? "opacity-30" : ""}`}
               onMouseMove={(ev) => {
                 const box =
                   ev.currentTarget.ownerSVGElement!.parentElement!.getBoundingClientRect();
@@ -63,12 +96,21 @@ export function Worldmap({
                   name: shape.name,
                   x: ev.clientX - box.left,
                   y: ev.clientY - box.top,
+                  mapWidth: box.width,
                 });
               }}
+              onMouseLeave={() => onHover(null)}
             />
-          );
-        })}
-      </ZoomableGroup>
-    </ComposableMap>
+            {hasFewSongs && (
+              <path
+                d={shape.d}
+                fill={`url(#${FEW_SONGS_PATTERN_ID})`}
+                className={`pointer-events-none transition-opacity duration-300 ${isDimmed ? "opacity-30" : ""}`}
+              />
+            )}
+          </Fragment>
+        );
+      })}
+    </ZoomableMap>
   );
-}
+});
