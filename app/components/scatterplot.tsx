@@ -6,6 +6,7 @@ export type ScatterPoint = {
   id: string | number;
   x: number;
   y: number;
+  color?: string;
 };
 
 type ScatterAxis = {
@@ -149,10 +150,13 @@ export function Scatterplot<Point extends ScatterPoint>({
             data-active={hoveredId === point.id}
             data-selected={selectedId === point.id}
             data-selectable={Boolean(onPointSelect)}
-            style={{
-              left: `${x.position(point.x)}%`,
-              top: `${100 - y.position(point.y)}%`,
-            }}
+            style={
+              {
+                left: `${x.position(point.x)}%`,
+                top: `${100 - y.position(point.y)}%`,
+                ...(point.color ? { "--scatter-color": point.color } : {}),
+              } as CSSProperties
+            }
             onPointerEnter={() => setHoveredId(point.id)}
             onPointerLeave={() => setHoveredId(undefined)}
             onClick={onPointSelect && (() => onPointSelect(point))}
