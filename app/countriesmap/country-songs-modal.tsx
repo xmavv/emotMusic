@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { EmotionScoreBar } from "@/app/components/song-emotion-scores";
 import { getDominantEmotion } from "@/app/components/song-emotions";
 import { getSongDate } from "@/lib/songs";
@@ -22,6 +22,11 @@ export function CountrySongsModal({
   const headingId = useId();
   const [open, setOpen] = useState(false);
   const sortedSongs = open ? sortSongsByTitle(songs) : [];
+
+  useEffect(() => {
+    const element = dialog.current;
+    return () => element?.close();
+  }, []);
 
   return (
     <>
