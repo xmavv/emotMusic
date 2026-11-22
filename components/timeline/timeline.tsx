@@ -15,6 +15,8 @@ interface TimelineProps {
   maxYear: number;
   year: number;
   onYearChange: (year: number) => void;
+  muted?: boolean;
+  onInteract?: () => void;
 }
 
 export function Timeline({
@@ -22,6 +24,8 @@ export function Timeline({
   maxYear,
   year,
   onYearChange,
+  muted = false,
+  onInteract,
 }: TimelineProps) {
   const years = Array.from(
     { length: maxYear - minYear + 1 },
@@ -54,16 +58,25 @@ export function Timeline({
   }, [api, minYear, onYearChange]);
 
   useEffect(() => {
+    if (!api || !onInteract) return;
+    api.on("pointerDown", onInteract);
+    return () => {
+      api.off("pointerDown", onInteract);
+    };
+  }, [api, onInteract]);
+
+  useEffect(() => {
     if (!api) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") api.scrollPrev();
       else if (e.key === "ArrowRight") api.scrollNext();
       else return;
+      onInteract?.();
       e.preventDefault();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [api]);
+  }, [api, onInteract]);
 
   return (
     <div
@@ -74,7 +87,8 @@ export function Timeline({
       aria-valuemin={minYear}
       aria-valuemax={maxYear}
       aria-valuenow={year}
-      className={`${TIMELINE_VIEWPORT_CLASS} cursor-grab select-none rounded-lg outline-none focus-visible:ring-1 focus-visible:ring-amber-300/50 active:cursor-grabbing`}
+      aria-valuetext={muted ? "All time" : undefined}
+      className={`${TIMELINE_VIEWPORT_CLASS} cursor-grab select-none transition-opacity rounded-lg outline-none focus-visible:ring-1 focus-visible:ring-amber-300/50 active:cursor-grabbing ${muted ? "opacity-40" : ""}`}
     >
       <div
         className="flex h-full"
@@ -83,7 +97,7 @@ export function Timeline({
         }}
       >
         {years.map((y) => {
-          const isActive = y === year;
+          const isActive = !muted && y === year;
           const isMajor = y % 5 === 0;
           return (
             <div
@@ -113,7 +127,7 @@ export function Timeline({
       </div>
 
       <div
-        className={`${TIMELINE_INDICATOR_CLASS} bg-amber-300 shadow-[0_0_10px] shadow-amber-300/60`}
+        className={`${TIMELINE_INDICATOR_CLASS} ${muted ? "bg-neutral-600" : "bg-amber-300 shadow-[0_0_10px] shadow-amber-300/60"}`}
       />
     </div>
   );

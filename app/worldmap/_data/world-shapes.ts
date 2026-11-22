@@ -4,11 +4,13 @@ import { feature } from "topojson-client";
 import type { GeometryCollection, Topology } from "topojson-specification";
 import world from "world-atlas/countries-110m.json";
 import { ANTARCTICA_ID, MAP_WIDTH } from "@/app/worldmap/_constants/map";
+import { countryBounds, type Bounds } from "@/app/worldmap/_lib/country-bounds";
 
 export interface CountryShape {
   code: string | null;
   name: string;
   d: string;
+  bounds: Bounds | null;
 }
 
 export interface MapGeometry {
@@ -36,13 +38,17 @@ const [offsetX, offsetY] = projection.translate();
 projection.translate([offsetX, offsetY - landTop]);
 
 const countryShapes: CountryShape[] = mappedCountries.features.map(
-  (country) => ({
-    code: country.id
-      ? (countries.numericToAlpha2(String(country.id)) ?? null)
-      : null,
-    name: country.properties?.name ?? "Unknown",
-    d: toSvgPath(country) ?? "",
-  }),
+  (country) => {
+    const svgPath = toSvgPath(country) ?? "";
+    return {
+      code: country.id
+        ? (countries.numericToAlpha2(String(country.id)) ?? null)
+        : null,
+      name: country.properties?.name ?? "Unknown",
+      d: svgPath,
+      bounds: countryBounds(svgPath),
+    };
+  },
 );
 
 export const WORLD_MAP: MapGeometry = {

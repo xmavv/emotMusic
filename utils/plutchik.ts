@@ -19,7 +19,8 @@ export type EmotionValues = Record<PlutchikEmotion, number>;
 
 export const PLUTCHIK_EMOTIONS = Object.keys(WHEEL) as PlutchikEmotion[];
 
-export type Intensity = 0 | 1 | 2;
+export const INTENSITIES = [0, 1, 2] as const;
+export type Intensity = (typeof INTENSITIES)[number];
 
 export const emotionColor = (
   emotion: PlutchikEmotion,
