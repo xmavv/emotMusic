@@ -40,6 +40,7 @@ export type Database = {
           artistId: number | null;
           date: string | null;
           genre: string | null;
+          genreGroup: string | null;
           id: number;
           length: string | null;
           name: string | null;
@@ -50,6 +51,7 @@ export type Database = {
           artistId?: number | null;
           date?: string | null;
           genre?: string | null;
+          genreGroup?: never;
           id?: number;
           length?: string | null;
           name?: string | null;
@@ -59,6 +61,7 @@ export type Database = {
           artistId?: number | null;
           date?: string | null;
           genre?: string | null;
+          genreGroup?: never;
           id?: number;
           length?: string | null;
           name?: string | null;
@@ -129,10 +132,56 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      country_year_emotions: {
+        Row: {
+          anger: number | null;
+          anticipation: number | null;
+          country: string | null;
+          disgust: number | null;
+          fear: number | null;
+          genre_group: string | null;
+          joy: number | null;
+          sadness: number | null;
+          song_count: number | null;
+          surprise: number | null;
+          trust: number | null;
+          year: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
     };
     Functions: {
-      [_ in never]: never;
+      country_songs: {
+        Args: {
+          country_code: string;
+          cursor_id?: number;
+          page_size: number;
+          song_genre?: string;
+          song_year?: number;
+          sort_emotion?: string;
+        };
+        Returns: {
+          anger: number;
+          anticipation: number;
+          artist: string;
+          date: string;
+          disgust: number;
+          fear: number;
+          genre: string;
+          id: number;
+          joy: number;
+          name: string;
+          sadness: number;
+          surprise: number;
+          trust: number;
+        }[];
+      };
+      genre_group: { Args: { genre: string }; Returns: string };
+      refresh_country_year_emotions: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

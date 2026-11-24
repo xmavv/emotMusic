@@ -1,20 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Artist, SongEmotion } from "@/services/supabase/supabaseTables";
-import { DetailSections } from "@/app/components/details-modal";
-import { EmotionRadar, type RadarSeries } from "@/app/components/emotion-radar";
+import type { Artist, SongEmotion } from "@/services/supabase/tables";
+import { DetailSections } from "@/components/details-modal/details-modal";
+import {
+  EmotionRadar,
+  type RadarSeries,
+} from "@/components/song/emotion-radar";
 import {
   getSongDetailSections,
   songRadarColor,
-} from "@/app/components/song-details-modal";
-import { SongEmotionScores } from "@/app/components/song-emotion-scores";
+} from "@/components/song/song-details-modal";
+import { SongEmotionScores } from "@/components/song/song-emotion-scores";
 import {
   emotions,
   getDominantEmotion,
   type EmotionScores,
-} from "@/app/components/song-emotions";
-import { getSongDate, getSongGenres } from "@/lib/songs";
+} from "@/components/song/song-emotions";
+import { getSongDate, getSongGenres } from "@/utils/songs";
 
 const panelClass =
   "mx-auto max-w-6xl rounded-2xl border border-[#49364f] bg-[#100d14] p-[clamp(0.9rem,3vw,2rem)]";

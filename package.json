@@ -29,15 +29,25 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
+    "d3-geo": "^3.1.2",
+    "embla-carousel-react": "^8.6.0",
+    "embla-carousel-wheel-gestures": "^8.1.0",
+    "i18n-iso-countries": "^7.14.0",
     "next": "16.4.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-simple-maps": "^5.0.5",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/topojson-client": "^3.1.5",
+    "@types/topojson-specification": "^1.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
     "husky": "9.1.7",

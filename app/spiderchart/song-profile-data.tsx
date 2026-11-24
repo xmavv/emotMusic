@@ -1,7 +1,7 @@
 import {
   getArtistsLocations,
   getSongsAndEmotions,
-} from "@/services/supabase/supabaseActions";
+} from "@/services/supabase/actions";
 import { SongProfile } from "./song-profile";
 
 export async function SongProfileData({ songId }: { songId?: number }) {
