@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState, type CSSProperties } from "react";
-import type { Artist, SongEmotion } from "@/services/supabase/supabaseTables";
-import { Scatterplot } from "@/app/components/scatterplot";
-import { EmotionScoreBar } from "@/app/components/song-emotion-scores";
-import { SongDetailsModal } from "@/app/components/song-details-modal";
-import { dateFormat, dominantEmotions, getDominantEmotion, scoreFormat } from "@/app/components/song-emotions";
-import { euclideanDistance } from "@/lib/pacmap";
-import { getSongDate, getSongGenres } from "@/lib/songs";
+import type { Artist, SongEmotion } from "@/services/supabase/tables";
+import { Scatterplot } from "@/components/scatterplot/scatterplot";
+import { EmotionScoreBar } from "@/components/song/song-emotion-scores";
+import { SongDetailsModal } from "@/components/song/song-details-modal";
+import { dateFormat, dominantEmotions, getDominantEmotion, scoreFormat } from "@/components/song/song-emotions";
+import { euclideanDistance } from "@/utils/pacmap";
+import { getSongDate, getSongGenres } from "@/utils/songs";
 import {
   featureSpaces,
   getFeatureVector,

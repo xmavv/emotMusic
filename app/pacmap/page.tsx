@@ -1,8 +1,8 @@
-import { LoadingScreen } from "@/app/components/loading-screen";
+import { LoadingScreen } from "@/components/loading-screen/loading-screen";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { VisualizationPage } from "@/app/components/visualization-page";
-import { getArtistsLocations, getSongsAndEmotions } from "@/services/supabase/supabaseActions";
+import { VisualizationPage } from "@/components/visualization-page/visualization-page";
+import { getArtistsLocations, getSongsAndEmotions } from "@/services/supabase/actions";
 import { ProjectionMap } from "./projection-map";
 import { projectSongs } from "./song-projections";
 

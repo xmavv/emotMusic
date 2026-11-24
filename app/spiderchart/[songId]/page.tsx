@@ -1,23 +1,27 @@
-import { LoadingScreen } from "@/app/components/loading-screen";
+import { LoadingScreen } from "@/components/loading-screen/loading-screen";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Spiderchart } from "@/app/spiderchart/[songId]/spiderchart";
+import { VisualizationPage } from "@/components/visualization-page/visualization-page";
+import { SongProfileData } from "../song-profile-data";
 
-interface SpiderchartParams {
-  params: Promise<{
-    songId: string;
-  }>;
-}
+export const metadata: Metadata = {
+  title: "Profil emocjonalny utworu | emotMusic",
+};
 
-async function View({ params }: SpiderchartParams) {
+async function View({ params }: PageProps<"/spiderchart/[songId]">) {
   const { songId } = await params;
 
-  return <Spiderchart id={Number(songId)} />;
+  return <SongProfileData songId={Number(songId)} />;
 }
 
-export default function Page({ params }: SpiderchartParams) {
+// prettier-ignore
+export default function Page(props: PageProps<"/spiderchart/[songId]">) {
+
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <View params={params} />
-    </Suspense>
+    <VisualizationPage title="WYKRES RADAROWY" description="Profil emocjonalny utworu na wykresie radarowym wraz z metadanymi.">
+      <Suspense fallback={<LoadingScreen />}>
+        <View {...props} />
+      </Suspense>
+    </VisualizationPage>
   );
 }

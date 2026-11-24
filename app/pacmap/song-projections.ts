@@ -1,7 +1,7 @@
 import { UMAP } from "umap-js";
-import { pacmap } from "@/lib/pacmap";
-import { createRandom } from "@/lib/random";
-import type { SongEmotion } from "@/services/supabase/supabaseTables";
+import { pacmap } from "@/utils/pacmap";
+import { createRandom } from "@/utils/random";
+import type { SongEmotion } from "@/services/supabase/tables";
 import {
   featureSpaces,
   getFeatureVector,

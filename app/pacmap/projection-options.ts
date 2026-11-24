@@ -1,5 +1,5 @@
-import { dominantEmotions, emotions } from "@/app/components/song-emotions";
-import type { SongEmotion } from "@/services/supabase/supabaseTables";
+import { dominantEmotions, emotions } from "@/components/song/song-emotions";
+import type { SongEmotion } from "@/services/supabase/tables";
 
 export type EmotionKey = (typeof emotions)[number][0];
 
