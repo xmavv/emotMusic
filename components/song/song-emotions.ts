@@ -23,3 +23,20 @@ export const scoreFormat = new Intl.NumberFormat("pl-PL", {
 });
 
 export type EmotionScores = Partial<Omit<Emotion, "id">>;
+
+const sentiments = new Set(["positive", "negative", "neutral"]);
+export const dominantEmotions = emotions.filter(
+  ([key]) => !sentiments.has(key),
+);
+
+export function getDominantEmotion(scores?: EmotionScores | null) {
+  let dominant: { label: string; color: string; score: number } | undefined;
+
+  for (const [key, label, color] of dominantEmotions) {
+    const score = scores?.[key];
+    if (score == null || !Number.isFinite(score)) continue;
+    if (!dominant || score > dominant.score) dominant = { label, color, score };
+  }
+
+  return dominant;
+}

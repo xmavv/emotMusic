@@ -11,7 +11,7 @@ export default function Home() {
             <Link href="/worldmap">MAPA ŚWIATA</Link>
           </li>
           <li>
-            <Link href="/spiderchart/58">WYKRES RADAROWY</Link>
+            <Link href="/spiderchart">WYKRES RADAROWY</Link>
           </li>
           <li>
             <Link href="/scatterplot">WYKRES PUNKTOWY</Link>

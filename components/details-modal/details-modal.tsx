@@ -1,15 +1,46 @@
 "use client";
 
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 type DetailValue = string | number | null | undefined;
+
+export type DetailSectionsData = Readonly<
+  Record<string, Readonly<Record<string, DetailValue>>>
+>;
 
 type DetailsModalProps = {
   title: string;
   triggerLabel: string;
-  sections?: Readonly<Record<string, Readonly<Record<string, DetailValue>>>>;
+  sections?: DetailSectionsData;
   children?: ReactNode;
 };
+
+export function DetailSections({ sections }: { sections: DetailSectionsData }) {
+  return Object.entries(sections).map(([heading, fields]) => {
+    const entries = Object.entries(fields).filter(([, value]) =>
+      typeof value === "number"
+        ? Number.isFinite(value)
+        : Boolean(value?.trim()),
+    );
+    if (entries.length === 0) return null;
+    return (
+      <section
+        key={heading}
+        className="my-4 [&+&]:border-t [&+&]:border-[#6b4975] [&+&]:pt-4"
+      >
+        <h3 className="text-[1.2rem] text-[#f4a6f0]">{heading}</h3>
+        <dl className="mt-[0.55rem] grid grid-cols-2 gap-x-4 gap-y-[0.65rem]">
+          {entries.map(([label, value]) => (
+            <div key={label}>
+              <dt className="text-[#d4c2d9]">{label}</dt>
+              <dd className="wrap-anywhere">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    );
+  });
+}
 
 export function DetailsModal({
   title,
@@ -20,6 +51,11 @@ export function DetailsModal({
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const headingId = useId();
+
+  useEffect(() => {
+    const element = dialog.current;
+    return () => element?.close();
+  }, []);
 
   return (
     <>
@@ -72,30 +108,7 @@ export function DetailsModal({
         </header>
         {open && (
           <>
-            {Object.entries(sections ?? {}).map(([heading, fields]) => {
-              const entries = Object.entries(fields).filter(([, value]) =>
-                typeof value === "number"
-                  ? Number.isFinite(value)
-                  : Boolean(value?.trim()),
-              );
-              if (entries.length === 0) return null;
-              return (
-                <section
-                  key={heading}
-                  className="my-4 [&+&]:border-t [&+&]:border-[#6b4975] [&+&]:pt-4"
-                >
-                  <h3 className="text-[1.2rem] text-[#f4a6f0]">{heading}</h3>
-                  <dl className="mt-[0.55rem] grid grid-cols-2 gap-x-4 gap-y-[0.65rem]">
-                    {entries.map(([label, value]) => (
-                      <div key={label}>
-                        <dt className="text-[#d4c2d9]">{label}</dt>
-                        <dd className="wrap-anywhere">{value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </section>
-              );
-            })}
+            {sections && <DetailSections sections={sections} />}
             {children}
           </>
         )}
