@@ -1,7 +1,7 @@
 {
   "overrides": [
     {
-      "files": ["app/scatterplot/**/*.{ts,tsx}"],
+      "files": ["app/scatterplot/**/*.{ts,tsx}", "app/pacmap/**/*.{ts,tsx}"],
       "options": {
         "printWidth": 120
       }
