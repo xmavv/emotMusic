@@ -1,0 +1,37 @@
+name: CD
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+concurrency:
+  group: cd
+  cancel-in-progress: false
+
+jobs:
+  database:
+    name: Push migrations to remote
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      SUPABASE_YES: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Push migrations
+        run: npx supabase db push --remote="$SUPABASE_DB_URL"
+
+      - name: Refresh materialized views
+        run: psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -c 'select public.refresh_country_year_emotions();'
